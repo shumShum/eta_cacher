@@ -45,12 +45,15 @@ gem 'seed-fu'
 gem 'turbolinks'
 gem 'jquery-rails'
 gem 'bower-rails'
+gem 'twitter-bootstrap-rails'
 
 gem 'rabl'
 
 gem 'execjs'
 gem 'therubyracer'
 gem 'rest-client'
+gem 'react-rails', github: 'reactjs/react-rails', branch: 'master'
+gem 'js-routes', github: 'railsware/js-routes'
 
 gem 'state_machine'
 
