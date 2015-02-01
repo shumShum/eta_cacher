@@ -1,8 +1,8 @@
 module EtaCalculator
 
   def haversine_distance client, car
-    a = [client[:position][:lat], client[:position][:lng]]
-    b = [car.position[:lat], car.position[:lng]]
+    a = [client['lat'].to_i, client['lng'].to_i]
+    b = [car.position[:lat].to_i, car.position[:lng].to_i]
 
     rad_per_deg = Math::PI/180  # PI / 180
     rkm = 6371                  # Earth radius in kilometers
@@ -21,7 +21,19 @@ module EtaCalculator
   end
 
   def get_eta client, car
-    haversine_distance(client, car) * 1.5
+    key = "#{client['lat']}_#{client['lng']}_#{car.id}"
+    if $redis.exists(key)
+      eta = $redis.get(key).to_i
+      $cacher_logger.info "Get ETA from redis - #{eta}"
+    else
+      eta = (haversine_distance(client, car) * 1.5 / 60).to_i
+      $redis.multi do
+        $redis.set(key, eta)
+        $redis.sadd(car.id, key)
+      end
+      $cacher_logger.info "Get ETA from EtaCalculator - #{eta}"
+    end
+    eta
   end
 
 end

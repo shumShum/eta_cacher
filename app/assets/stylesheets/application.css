@@ -17,3 +17,11 @@
 .carList {
   width: 50%;
 }
+
+.editbtn {
+  width: 25px;
+  height: 25px;
+  background: url(/images/edit.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}

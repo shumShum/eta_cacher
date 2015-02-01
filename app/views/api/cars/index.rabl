@@ -1,2 +1,3 @@
 collection @cars
-attributes :id, :position, :state
+attributes :position, :state
+node(:id){|c| c.id.to_s}

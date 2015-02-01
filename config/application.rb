@@ -25,5 +25,7 @@ module EtaCacher
 
     config.autoload_paths += %W(#{config.root}/lib)
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    config.cache_store = :redis_store, 'redis://localhost:6379/0/cache', { expires_in: 15.minutes }
   end
 end

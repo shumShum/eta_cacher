@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.1.6'
 
 gem 'mongoid'
+gem 'redis-rails'
 
 gem 'sdoc', '~> 0.4.0', group: :doc
 

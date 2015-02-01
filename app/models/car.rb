@@ -3,6 +3,12 @@ class Car
 
   field :position, type: Hash
 
+  scope :free, lambda { where(state: :free) }
+  scope :busy, lambda { where(state: :busy) }
+
+  after_update :clear_cache
+  before_destroy :clear_cache
+
   state_machine initial: :free do
     state :busy
 
@@ -15,13 +21,19 @@ class Car
     end
 
     event :busied do
-      transition free: :busie
+      transition free: :busy
+    end
+  end
+
+  def clear_cache
+    if $redis.exists(self.id)
+      keys = $redis.smembers(self.id)
+      $redis.multi do
+        keys.each do |key|
+          $redis.del(key)
+        end
+        $redis.del(self.id)
+      end
     end
   end
 end
-
-# запрос eta - высчитываем для трех ближайших машин - в кеш идет:
-# - 3 строки результата вида {lat_lng: eta}
-# - 3 строки инвалидаторов вида {car_id: lat_lng}
-
-# машина изменила положение или стейт - удаляем строки из кеша по инвалидаторам
