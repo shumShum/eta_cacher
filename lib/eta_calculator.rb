@@ -21,6 +21,8 @@ module EtaCalculator
   end
 
   def get_eta client, car
+    client['lat'] = client['lat'].to_i.round(3)
+    client['lng'] = client['lng'].to_i.round(3)
     key = "#{client['lat']}_#{client['lng']}_#{car.id}"
     if $redis.exists(key)
       eta = $redis.get(key).to_i
